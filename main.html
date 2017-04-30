@@ -1,0 +1,31 @@
+<HTML>
+<title> Click the Dots </Title>
+<head>
+	<META NAME="author" CONTENT="Patrick Heintz">
+	<META NAME="description" CONTENT="See experiment 1: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2831453/pdf/jaba-43-01-47.pdf 
+	a game where you must click on a moving dot to earn points">
+	<meta charset="UTF-8">
+
+	<script type="text/javascript">
+		
+		function myMove(){
+		  var elem = document.getElementById("blackDot");
+		  var pos = 0;
+		  var id = setInterval(frame, 5);
+		  function frame() {
+			if (pos == 350) {
+			  clearInterval(id);
+			} else {
+			  pos++;
+			  elem.style.top = pos + 'px';
+			  elem.style.left = pos + 'px';
+			}
+		  }
+		}
+	</script>
+</head>
+<body>
+	<button onclick="myMove()">Click Me</button><br>
+	<img src='./circle.png' id='blackDot'>
+</body>
+</html>

@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<title>Dot Game</title>
+<html>
+<style>
+#blackDot {
+	width: 50px;
+	height: 50px;
+	position: absolute;
+  
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+#redDot {
+	width: 50px;
+	height: 50px;
+	position: absolute;
+  
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+#start{
+	font-size: 3em;
+	margin-top: 150px;
+	margin-left: 150px;
+	
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+#results{
+	font-size: 3em;
+	margin-top: 750px;
+	margin-left: 250px;
+	
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+#redDot {
+      width: 50px;
+      height: 50px;
+      -webkit-border-radius: 25px;
+      -moz-border-radius: 25px;
+      border-radius: 25px;
+      background: red;
+    }
+	
+#blackDot {
+  width: 50px;
+  height: 50px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  border-radius: 25px;
+  background: black;
+}
+
+
+</style>
+<body>
+
+	<div id = "start" onclick="imgClicked('start')"> Click Here To Start </div> 
+	<div id ="blackDot" onmousedown="imgClicked('black')"/></div>
+	<div id ="redDot" onmousedown="imgClicked('red')"/></div>
+	<div id ="results"></div>
+<script>
+
+
+document.getElementById("blackDot").style.top = 250 + 'px';
+document.getElementById("redDot").style.top = 250 + 'px';
+document.getElementById("blackDot").style.left = 200 + 'px';
+document.getElementById("redDot").style.left = 400 + 'px';
+
+
+var PIXELS = 500; // size of screen
+
+/** id is the variable holding the framing elements */
+var id = 0;
+var time = 0;
+var stop = 1;
+var seconds = 0;
+var phaseTime = 300;
+
+var speed = 10;
+var oneSecond = 1000; //milliseconds
+
+/** Points for each respective dot */
+var blackPoints = 0;
+var redPoints = 0;
+
+var score = 0; //total game score
+var stage = 0; //current stage (change by one after every phaseTime)
+
+var redDot = 
+{
+	xPos	: 0,
+	yPos	: 0,
+	
+	xDir	: 0,
+	yDir	: 0,
+	
+	move : function()
+	{
+		/** If else statements that check bounds and then move the dot */		
+		
+		/** Change direction from left to right */
+		if(Math.floor(this.xPos) <= 0 && this.xDir == 0)
+		{
+			this.xDir = 1;
+		}
+		/** Change direction from right to left */
+		else if(Math.ceil(this.xPos) >= PIXELS && this.xDir == 1)
+		{
+			this.xDir = 0;
+		}
+		else
+		{
+			// not moving left or right
+		}
+		
+		/** Switch from down to up*/
+		if(Math.ceil(this.yPos) >= PIXELS && this.yDir == 1)
+		{
+			this.yDir = 0;
+		}
+		/** Switch from up to down */
+		else if(Math.floor(this.yPos) <= 0 && this.yDir == 0)
+		{
+			this.yDir = 1;
+		}
+		else
+		{
+			// not moving up or down
+		}
+		
+		if(this.yDir == 1 && this.xDir == 1)
+		{
+			this.yPos += 0.7071;
+			this.xPos += 0.7071;
+			return;
+		}
+		else if(this.yDir == 0 && this.xDir == 0)
+		{
+			this.yPos -= 0.7071;
+			this.xPos -= 0.7071;
+			return;
+		}
+		else if(this.yDir == 1 && this.xDir == 0)
+		{
+			this.yPos += 0.7071;
+			this.xPos -= 0.7071;
+			return;
+		}
+		else if(this.yDir == 0 && this.xDir == 1)
+		{
+			this.yPos -= 0.7071;
+			this.xPos += 0.7071;
+			return;
+		}
+		
+		
+		/** Move dot to the left */
+		if(this.xDir == 0)
+		{
+			--this.xPos;
+		}
+		/** Move dot to the right */
+		else if(this.xDir == 1)
+		{
+			++this.xPos;
+		}
+		
+		/** Move dot upwards */
+		if(this.yDir == 0)
+		{
+			--this.yPos;
+		}
+		/** Move dot down */
+		else if(this.yDir == 1)
+		{
+			++this.yPos;
+		}
+		return 0;
+	}
+};
+
+var blackDot = 
+{
+	/** Position on the screen (pixels) */
+	xPos	: 0,
+	yPos	: 0,
+	
+	/** Direction dots are moving in x and y direction
+	*	0 being negative, 1 being positive
+	*/
+	xDir	: 0,
+	yDir	: 0,
+	
+	move : function()
+	{
+		/** If else statements that check bounds and then move the dot */		
+		
+		/** Change direction from left to right */
+		if(Math.floor(this.xPos) <= 0 && this.xDir == 0)
+		{
+			this.xDir = 1;
+		}
+		/** Change direction from right to left */
+		else if(Math.ceil(this.xPos) >= PIXELS && this.xDir == 1)
+		{
+			this.xDir = 0;
+		}
+		else
+		{
+			// not moving left or right
+		}
+		
+		/** Switch from down to up*/
+		if(Math.ceil(this.yPos) >= PIXELS && this.yDir == 1)
+		{
+			this.yDir = 0;
+		}
+		/** Switch from up to down */
+		else if(Math.floor(this.yPos) <= 0 && this.yDir == 0)
+		{
+			this.yDir = 1;
+		}
+		else
+		{
+			// not moving up or down
+		}
+		
+		if(this.yDir == 1 && this.xDir == 1)
+		{
+			this.yPos += 0.7071;
+			this.xPos += 0.7071;
+			return;
+		}
+		else if(this.yDir == 0 && this.xDir == 0)
+		{
+			this.yPos -= 0.7071;
+			this.xPos -= 0.7071;
+			return;
+		}
+		else if(this.yDir == 1 && this.xDir == 0)
+		{
+			this.yPos += 0.7071;
+			this.xPos -= 0.7071;
+			return;
+		}
+		else if(this.yDir == 0 && this.xDir == 1)
+		{
+			this.yPos -= 0.7071;
+			this.xPos += 0.7071;
+			return;
+		}
+		
+		
+		/** Move dot to the left */
+		if(this.xDir == 0)
+		{
+			--this.xPos;
+		}
+		/** Move dot to the right */
+		else if(this.xDir == 1)
+		{
+			++this.xPos;
+		}
+		
+		/** Move dot upwards */
+		if(this.yDir == 0)
+		{
+			--this.yPos;
+		}
+		/** Move dot down */
+		else if(this.yDir == 1)
+		{
+			++this.yPos;
+		}
+		return 0;
+	}
+};
+
+function gameOver()
+{
+	stage++;
+	clearInterval(time);
+	seconds = 0;
+	
+	if(stage == 6)
+	{
+		pause();
+		return;
+	}
+	
+	time = setInterval(timer, 1000);
+	function timer()
+	{
+		seconds++;
+		if(seconds > phaseTime)
+		{
+			gameOver();
+		}
+	}
+	
+	if(stage > 11){
+		stop = 1;
+		clearInterval(id);
+		document.getElementById("start").style.display = "initial";
+		document.getElementById("start").innerHTML = "Test Concluded.";
+		document.getElementById("blackDot").style.top = 250 + 'px';
+		document.getElementById("redDot").style.top = 250 + 'px';
+		document.getElementById("blackDot").style.left = 200 + 'px';
+		document.getElementById("redDot").style.left = 400 + 'px';
+	}
+}
+
+
+function reset()
+{
+	score = 0;
+}
+
+/** Move function that directs the dots in both x and y direction */
+function myMove() {
+
+	if(stop === 1)
+	{
+		return;
+	}
+	
+	id = setInterval(frame, 10);
+	
+	
+	/** Get dot elements */
+	var blackDotImage = document.getElementById("blackDot");
+	var redDotImage = document.getElementById("redDot");
+	
+	/** Starting position of red and black*/
+	getStartingLocation(redDot);
+	getStartingLocation(blackDot);
+	
+	setDirection(redDot);
+	setDirection(blackDot);
+	
+	function frame() 
+	{
+		redDot.move();
+		blackDot.move();
+		  
+		redDotImage.style.top = redDot.yPos + 100 + 'px';
+		redDotImage.style.left = redDot.xPos + 100 + 'px';
+		
+		blackDotImage.style.top = blackDot.yPos + 100 + 'px';
+		blackDotImage.style.left = blackDot.xPos + 100 + 'px';
+	}
+}
+
+
+
+/** Subset 1: 
+Baseline (no restrictions for red or black). 
+Full DRA (red dots get points every time). 
+Subset 2: Commission errors only. 
+Red dot gets points every single time. 
+80% (black gets points 20% of responding).... */
+function imgClicked(color)
+{
+	if(stage > 11)
+	{
+		if(color === 'start')
+		{
+			window.location.replace('./home.html');
+		}
+		return;
+	}
+	//Math.random() * (max - min) + min;
+	var random = Math.random() * 100;
+	if(stop === 0)
+	{
+		if(color === 'black')
+		{
+			switch(stage)
+			{
+				case 0:
+					blackPoints++;
+					break;
+				case 1:
+					break;
+				case 2:
+					if(random > 50)
+					{
+						blackPoints++;
+					}
+					break;
+				case 3:
+					if(random > 50)
+					{
+						blackPoints++;
+					}
+					break;
+				case 4:
+					if(random > 50)
+					{
+						blackPoints++;
+					}
+					break;
+				case 5:
+					if(random > 50)
+					{
+						blackPoints++;
+					}
+					break;
+				case 6:
+					blackPoints++;
+					break;
+				case 7:
+					break;
+				case 8:
+					if(random > 50)
+					{
+						blackPoints++;
+					}
+					break;
+				case 9:
+					if(random > 50)
+					{
+						blackPoints++;
+					}
+					break;
+				case 10:
+					if(random > 50)
+					{
+						blackPoints++;
+					}
+					break;
+				case 11:
+					if(random > 50)
+					{
+						blackPoints++;
+					}
+					break;
+			}
+		}
+		else if(color === 'red')
+		{
+			switch(stage)
+			{
+				case 0:
+					redPoints++;
+					break;
+				case 1:
+					redPoints++;
+					break;
+				case 2:
+					if(random > 50)
+					{
+						redPoints++;
+					}
+					break;
+				case 3:
+					if(random > 50)
+					{
+						redPoints++;
+					}
+					break;
+				case 4:
+					if(random > 50)
+					{
+						redPoints++;
+					}
+					break;
+				case 5:
+					if(random > 50)
+					{
+						redPoints++
+					}
+					break;
+				case 6:
+					redPoints++;
+					break;
+				case 7:
+					redPoints++;
+					break;
+				case 8:
+					if(random > 50)
+					{
+						redPoints++;
+					}
+					break;
+				case 9:
+					if(random > 50)
+					{
+						redPoints++;
+					}
+					break;
+				case 10:
+					if(random > 50)
+					{
+						redPoints++;
+					}
+					break;
+				case 11:
+					if(random > 50)
+					{
+						redPoints++
+					}
+					break;
+			}
+		}
+		document.getElementById("results").innerHTML = "Red: " + redPoints + "</br>Black: " + blackPoints;
+	}
+	
+	
+	if(color === 'start')
+	{
+		document.getElementById("start").style.display = "none";
+		document.getElementById("results").innerHTML = "Red: " + redPoints + "</br>Black: " + blackPoints;
+		stop = 0;
+		time = setInterval(timer, 1000);
+		function timer()
+		{
+			seconds++;
+			if(seconds > phaseTime)
+			{
+				gameOver();
+			}
+		}
+	}
+	else if(stop === 1)
+	{
+		return;
+	}
+	
+	clearInterval(id);
+	
+	getStartingLocation(redDot);
+	getStartingLocation(blackDot);
+	
+	setDirection(redDot);
+	setDirection(blackDot);
+	
+	myMove();
+}
+  
+function pause()
+{
+	// break time!
+	stop = 1;
+	clearInterval(id);
+	
+	document.getElementById("start").style.display = "initial";
+	document.getElementById("start").innerHTML = "Break Time";
+	document.getElementById("blackDot").style.top = 250 + 'px';
+	document.getElementById("redDot").style.top = 250 + 'px';
+	document.getElementById("blackDot").style.left = 200 + 'px';
+	document.getElementById("redDot").style.left = 400 + 'px';
+}
+ /****************************************************
+ *
+ *		We need functions
+ *		Left to right
+ *		Right to Left
+ *		Top to Bottom
+ *		Bottom to Top
+ *		Diagonals: Left to right(both up and down)
+ *		Diagonals: Right to Left(both up and down)
+ *
+ ****************************************************/
+ function getStartingLocation(dot)
+ {
+	var randomNumber = Math.floor(Math.random() * 4);
+	var pixels = Math.floor(Math.random() * PIXELS);
+	
+	switch(randomNumber)
+	{
+		case 0:
+			// left edge
+			dot.xPos = 0;
+			dot.yPos = pixels;
+			break;
+		case 1:
+			// top edge
+			dot.xPos = pixels;
+			dot.yPos = 0;
+			break;
+		case 2:
+			// right edge
+			dot.xPos = PIXELS;
+			dot.yPos = pixels;
+			break;
+		case 3:
+			// bottom edge
+			dot.xPos = pixels;
+			dot.yPos = PIXELS;
+			break;
+	}
+ }
+ 
+ function setDirection(dot){
+ 
+	//randomly determine direction
+	var randomNumber = Math.floor(Math.random() * 8);
+	switch(randomNumber){
+	
+	/** FLAGS
+	*	-1 	: No direction
+	*	0	: Negative direction
+	*	1	: Positive direction
+	**/
+	
+		case 0:
+			dot.xDir = 1;	// left to right
+			dot.yDir = -1;	// no movement in y direction
+			break;
+		case 1:
+			// right to left
+			dot.xDir = 0;
+			dot.yDir = -1;
+			break;
+		case 2:
+			// top to bottom
+			dot.xDir = -1;
+			dot.yDir = 1;
+			break;
+		case 3:
+			//bottom to top
+			dot.xDir = -1;
+			dot.yDir = 0;
+			break;
+		case 4:
+			//left to right, bottom to top
+			dot.xDir = 1;
+			dot.yDir = 0;
+			break;
+		case 5:
+			//right to left, bottom to top
+			dot.xDir = 0;
+			dot.yDir = 0;
+			break;
+		case 6:
+			//left to right, top to bottom
+			dot.xDir = 1;
+			dot.yDir = 1;
+			break;
+		case 7:
+			//left to right, bottom to top
+			dot.xDir = 1;
+			dot.yDir = 0;
+			break;
+	}
+ }
+</script>
+
+</body>
+</html>

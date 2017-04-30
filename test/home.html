@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<title>Dot Game</title>
+<html>
+<style>
+html {
+        overflow: auto;
+}
+
+#blackDot {
+	width: 50px;
+	height: 50px;
+	position: absolute;
+  
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+#redDot {
+	width: 50px;
+	height: 50px;
+	position: absolute;
+  
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+#start{
+	font-size: 3em;
+	margin-top: 150px;
+	margin-left: 150px;
+	
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+#results{
+	font-size: 3em;
+	margin-top: 250px;
+	margin-left: 425px;
+	
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+#redDot {
+      width: 50px;
+      height: 50px;
+      -webkit-border-radius: 25px;
+      -moz-border-radius: 25px;
+      border-radius: 25px;
+      background: red;
+    }
+	
+#blackDot {
+  width: 50px;
+  height: 50px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  border-radius: 25px;
+  background: black;
+}
+
+
+</style>
+<script>
+
+	function gameClicked(gameNumber)
+	{
+		switch(gameNumber)
+		{
+			case 1:
+				window.location.assign('./game1.html');
+				break;
+			case 2:
+				window.location.assign('./game2.html');
+				break;
+			case 3:
+				window.location.assign('./game3.html');
+				break;
+			case 4:
+				window.location.assign('./game4.html');
+				break;
+		}
+	}
+
+</script>
+
+<body>
+<table id = "results">
+
+<tr><td onclick="gameClicked(1)">Game 1</td><td onclick="gameClicked(2)">Game 2</td></tr>
+<tr><td onclick="gameClicked(3)">Game 3</td><td onclick="gameClicked(4)">Game 4</td></tr>
+
+</body>
+</html>
